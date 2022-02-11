@@ -17,22 +17,24 @@ const getApiInfo = async () => {
   let videogamesArr = [];
   let urlApi = `https://api.rawg.io/api/games?key=${API_KEY}`;
   try {
-    const urlData = await axios.get(urlApi); //prometo darte los juegos, los juegos son muchos objetos
-    urlData.data.results //aca guardo la respuesta de results (results es un array con esos objetos)que son los objetos de videojuegos
-      .map((e) => {
-        //le paso un map para q me pase un nuevo array solo con esas propiedades
-        videogamesArr.push({
-          id: e.id,
-          name: e.name,
-          background_image: e.background_image,
-          released: e.released,
-          rating: e.rating,
-          platforms: e.platforms.map((e) => e.platform.name),
-          genres: e.genres.map((e) => e.name),
+    for (let i = 0; i < 5; i++) {
+      const urlData = await axios.get(urlApi); //prometo darte los juegos, los juegos son muchos objetos
+      urlData.data.results //aca guardo la respuesta de results (results es un array con esos objetos)que son los objetos de videojuegos
+        .map((e) => {
+          //le paso un map para q me pase un nuevo array solo con esas propiedades
+          videogamesArr.push({
+            id: e.id,
+            name: e.name,
+            background_image: e.background_image,
+            released: e.released,
+            rating: e.rating,
+            platforms: e.platforms.map((e) => e.platform.name),
+            genres: e.genres.map((e) => e.name),
+          });
         });
-      });
-    urlApi = urlData.data.next;
-    //  console.log(arrLimpio);
+      urlApi = urlData.data.next;
+      //  console.log(arrLimpio);
+    }
     return videogamesArr; //retorno ese array nuevo ya pasado en limpio
   } catch (error) {
     console.log(error); //por si me salta algun error

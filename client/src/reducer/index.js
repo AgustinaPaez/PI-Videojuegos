@@ -13,6 +13,12 @@ function rootReducer(state = initialState, action) {
         videogames: action.payload, //en mi estado videogames manda todo lo que te mande la action get videogames
         allVideogames: action.payload, //meteme todos los juegos en allVideogames tambien
       };
+    case "GET_NAME_VIDEOGAMES":
+      return {
+        ...state,
+        videogames: action.payload, //siempre voy a trabajr sobre lo que estoy fitrando
+      };
+
     case "FILTER_CREATED":
       const allVideogamesOrigen = state.allVideogames;
       const createdFilter =
@@ -32,6 +38,15 @@ function rootReducer(state = initialState, action) {
       return {
         ...state,
         videogames: sortArr,
+      };
+    case "ORDER_BY_RATING":
+      let arrSort =
+        action.payload === "asc"
+          ? state.videogames.sort((a, b) => a.rating - b.rating)
+          : state.videogames.sort((a, b) => b.rating - a.rating);
+      return {
+        ...state,
+        videogames: arrSort,
       };
     default:
       return state;

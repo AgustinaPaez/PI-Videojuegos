@@ -1,10 +1,11 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector} from "react-redux";
-import { getVideogames, filterCreated, orderByName } from "../actions";
+import { getVideogames, filterCreated, orderByName, orderByRating } from "../actions";
 import {Link} from "react-router-dom";
 import Card from "./Card";
 import Paginado from "./Paginado";
+import SearchBar from "./SearchBar";
 
 
 export default function Home(){
@@ -43,6 +44,13 @@ function handleSort(e){
     setOrden(`Ordenado ${e.target.value}`)  //a ese estado local modificalo para q desde el front me haga el ordenamiento, lo seteo ordenado de x forma, para que me haga la modificacion del renderizado
 }
 
+function handleSortRating(e){
+    e.preventDefault()
+    dispatch(orderByRating(e.target.value))
+    setCurrentPage(1);
+    setOrden(`Ordenado ${e.target.value}`)
+}
+
 
 /*
 function handleFilterStatus(e){  //cuando el select se me modifique ejecutame esta funcion
@@ -63,14 +71,12 @@ return (
         </button>
         <div>
             <select onChange={e =>handleSort(e)}>
-                <option value = 'ning'>Ninguno</option>
                 <option value = 'asc'>A-Z</option>
                 <option value = 'desc'>Z-A</option>
             </select>
-            <select>
-                <option value = 'ning'>Ninguno</option> 
-                <option value = 'asc'>Alto</option>
-                <option value = 'desc'>Bajo</option>
+            <select onChange={e=> handleSortRating(e)}>
+                <option value = 'asc'>Ascendente</option>
+                <option value = 'desc'>Descendente</option>
             </select>
             <select>
                 <option value = 'All'>Todos</option>   
@@ -86,14 +92,11 @@ return (
             allVideogames={allVideogames.length}
             paginado = {paginado}
             />
+            <SearchBar/>
             {
                currentVideogames && currentVideogames.map(e =>{  //ahora en vez de usar todos los juegos solo voy a mapear sobre una parte del arreglo que serian solo los juegos de esa pagina en la que este
                    return (
-                       <fragment className = 'cartas'>
-                           <Link to = {'/home/' + e.id}>
-                   <Card background_image= {e.background_image} name={e.name} genres={e.genres} key= {e.id}  />
-                   </Link>
-                   </fragment>
+                   <Card id={e.id} background_image={e.background_image} name={e.name} genres={e.genres}  key={e.id}/>
                )})
             }
         </div>

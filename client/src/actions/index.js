@@ -2,14 +2,58 @@ import axios from "axios";
 
 export function getVideogames() {
   return async function (dispatch) {
-    const json = await axios.get("http://localhost:3001/videogames");
-    return dispatch({
-      type: "GET_VIDEOGAMES",
-      payload: json.data,
-    });
+    try {
+      const json = await axios.get("http://localhost:3001/videogames");
+      return dispatch({
+        type: "GET_VIDEOGAMES",
+        payload: json.data,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 }
-
+export function getGenres() {
+  return async function (dispatch) {
+    try {
+      const json = await axios.get("http://localhost:3001/genres");
+      return dispatch({
+        type: "GET_GENRES",
+        payload: json.data,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+export function postGame(payload) {
+  return async function (dispatch) {
+    try {
+      const json = await axios.post("http://localhost:3001/videogame", payload);
+      return dispatch({
+        type: "POST_GAME",
+        payload: json.data,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+export function getDetail(payload) {
+  return async function (dispatch) {
+    try {
+      const json = await axios.get(
+        "http://localhost:3001/videogame/" + payload
+      );
+      return dispatch({
+        type: "GET_DETAIL",
+        payload: json.data,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
 export function getNameVideogames(payload) {
   return async function (dispatch) {
     try {
@@ -29,7 +73,12 @@ export function getNameVideogames(payload) {
     }
   };
 }
-
+export function filterByGenres(payload) {
+  return {
+    type: "FILTER_BY_GENRES",
+    payload,
+  };
+}
 export function filterCreated(payload) {
   //el payload es el value de la opcion que vos elijas
   return {

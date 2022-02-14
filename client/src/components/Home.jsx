@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector} from "react-redux";
-import { getVideogames, filterCreated, orderByName, orderByRating } from "../actions";
+import { getVideogames, filterCreated, orderByName, orderByRating,getGenres, filterByGenres } from "../actions";
 import {Link} from "react-router-dom";
 import Card from "./Card";
 import Paginado from "./Paginado";
@@ -11,6 +11,7 @@ import SearchBar from "./SearchBar";
 export default function Home(){
     const dispatch = useDispatch(); //para utilizar esa constante e ir despachando mis acciones
     const allVideogames = useSelector((state)=> state.videogames) //traeme en esta constante todo lo que esta en el estado de videogames, la declaro y ya trabajo con esa constante
+    const allGenres = useSelector((state)=>state.genres)
     const [orden, setOrden] = useState('') //estado local vacio para lo unico q lo uso es para q cuando yo seteo esta pagina me modifique el estado local y se renderice
     const [currentPage, setCurrentPage] = useState(1) //declaro un estado local y le digo siempre voy a arrancar en la primer pagina en 1
     const [videogamesPerPage, setVideogamesPerPage] = useState(15) //declaro otro estado local,cuantos videojuegos quiero por pagina
@@ -25,6 +26,7 @@ export default function Home(){
     //con el useEffect voy a trserme del estado los personajes cuando el componente se monta
     useEffect(()=>{
         dispatch(getVideogames()) //despacho la accion
+        dispatch(getGenres())
     }, [dispatch]) //segundo parametro del useEffect para que no se me haga un bulce infinito, lo q se inlcuye adentro del arreglo es de lo que depende el componente didMount, es como cuando tenes dependencias de una y otra cosa
 
 function handleClick(e){
@@ -32,6 +34,10 @@ e.preventDefault();
 dispatch(getVideogames())
 }
 
+function handleFilterGenres(e){
+    dispatch(filterByGenres(e.target.value))
+    setCurrentPage(1)
+}
 function handleFilterCreated(e){
     dispatch(filterCreated(e.target.value))  //e.target.value es lo que viene del select, o sea el payload
     setCurrentPage(1)
@@ -78,9 +84,13 @@ return (
                 <option value = 'asc'>Ascendente</option>
                 <option value = 'desc'>Descendente</option>
             </select>
-            <select>
-                <option value = 'All'>Todos</option>   
-                <option value = 'Unknow'>Desconocido</option>
+            <select onChange={e => handleFilterGenres(e)}>
+                <option value = 'All'>Todos</option> 
+                {allGenres?.map((e)=>(
+                    <option key= {e} value={e}>
+                        {e}
+                    </option>
+                ))}
             </select>
             <select onChange={e => handleFilterCreated(e)}>
                 <option value = 'All'>Todos</option>

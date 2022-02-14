@@ -1,6 +1,8 @@
 const initialState = {
   videogames: [], //tambien vamos a tener que hacer esto de generos
   allVideogames: [], //hace una copia del estado que siempre tenga todos los personajes
+  genres: [],
+  detail: [],
 };
 
 function rootReducer(state = initialState, action) {
@@ -13,12 +15,33 @@ function rootReducer(state = initialState, action) {
         videogames: action.payload, //en mi estado videogames manda todo lo que te mande la action get videogames
         allVideogames: action.payload, //meteme todos los juegos en allVideogames tambien
       };
+    case "GET_GENRES":
+      return {
+        ...state,
+        genres: action.payload,
+      };
+    case "FILTER_BY_GENRES":
+      const allVideogamesGenres = state.allVideogames;
+      const genresFilter =
+        action.payload === "All"
+          ? allVideogamesGenres
+          : allVideogamesGenres.filter((e) =>
+              e.genres.includes(action.payload)
+            );
+      return {
+        ...state,
+        videogames: genresFilter,
+      };
     case "GET_NAME_VIDEOGAMES":
       return {
         ...state,
         videogames: action.payload, //siempre voy a trabajr sobre lo que estoy fitrando
       };
-
+    case "GET_DETAIL":
+      return {
+        ...state,
+        detail: action.payload,
+      };
     case "FILTER_CREATED":
       const allVideogamesOrigen = state.allVideogames;
       const createdFilter =

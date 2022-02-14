@@ -61,6 +61,7 @@ const getDbInfo = async () => {
       released: e.released,
       rating: e.rating,
       platforms: e.platforms,
+      createdInDb: e.createdInDb,
       genres: e.genres.map((el) => el.name),
     };
   });
@@ -277,7 +278,7 @@ router.post("/videogame", async (req, res) => {
     platforms,
     createdInDb,
   } = req.body;
-  console.log(req.body);
+  //console.log(req.body);
 
   const videogameCreated = await Videogame.create({
     //aca si uso directamente el create
